@@ -1,28 +1,39 @@
 # Laravel Stock
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/appstract/laravel-stock.svg?style=flat-square)](https://packagist.org/packages/appstract/laravel-stock)
-[![Total Downloads](https://img.shields.io/packagist/dt/appstract/laravel-stock.svg?style=flat-square)](https://packagist.org/packages/appstract/laravel-stock)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/appstract/laravel-stock/master.svg?style=flat-square)](https://travis-ci.org/appstract/laravel-stock)
+[//]: # ([![Latest Version on Packagist]&#40;https://img.shields.io/packagist/v/appstract/laravel-stock.svg?style=flat-square&#41;]&#40;https://packagist.org/packages/appstract/laravel-stock&#41;)
+
+[//]: # ([![Total Downloads]&#40;https://img.shields.io/packagist/dt/appstract/laravel-stock.svg?style=flat-square&#41;]&#40;https://packagist.org/packages/appstract/laravel-stock&#41;)
+
+[//]: # ([![Software License]&#40;https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square&#41;]&#40;LICENSE.md&#41;)
+
+[//]: # ([![Build Status]&#40;https://img.shields.io/travis/appstract/laravel-stock/master.svg?style=flat-square&#41;]&#40;https://travis-ci.org/appstract/laravel-stock&#41;)
 
 Keep stock for Eloquent models. This package will track stock mutations for your models. You can increase, decrease, clear and set stock. It's also possible to check if a model is in stock (on a certain date/time).
+
+## Functionality
+* Increase stocks
+* Decrease stocks
+* Clear stocks
+* Set stocks
+* Check if model has stock or not (on a certain date/time).
+* Send notification when a pre-defined stock level is reached
 
 ## Installation
 
 You can install the package via composer:
 
 ``` bash
-composer require appstract/laravel-stock
+composer require mendela92/laravel-stock
 ```
 
-By running `php artisan vendor:publish --provider="Appstract\Stock\StockServiceProvider"` in your project all files for this package will be published. Run `php artisan migrate` to migrate the table. There will now be a `stock_mutations` table in your database.
+By running `php artisan vendor:publish --provider="Mendela92\Stock\StockServiceProvider"` in your project all files for this package will be published. Run `php artisan migrate` to migrate the table. There will now be a `stock_mutations` table in your database.
 
 ## Usage
 
 Adding the `HasStock` trait will enable stock functionality on the Model.
 
 ``` php
-use Appstract\Stock\HasStock;
+use Mendela92\Stock\HasStock;
 
 class Book extends Model
 {
@@ -102,11 +113,7 @@ composer test
 
 ## Contributing
 
-Contributions are welcome, [thanks to y'all](https://github.com/appstract/laravel-stock/graphs/contributors) :)
-
-## About Appstract
-
-Appstract is a small team from The Netherlands. We create (open source) tools for Web Developers and write about related subjects on [Medium](https://medium.com/appstract). You can [follow us on Twitter](https://twitter.com/appstractnl), [buy us a beer](https://www.paypal.me/appstract/10) or [support us on Patreon](https://www.patreon.com/appstract).
+Contributions are welcome, [thanks to y'all](https://github.com/mendela92/laravel-stock/graphs/contributors) :)
 
 ## License
 

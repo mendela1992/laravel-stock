@@ -1,6 +1,6 @@
 <?php
 
-namespace Appstract\Stock;
+namespace Mendela92\Stock;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -14,11 +14,11 @@ class StockServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../config/stock.php' => config_path('stock.php'),
-            ], 'config');
+            ], 'stock-config');
 
             $this->publishes([
                 __DIR__.'/../database/migrations' => database_path('migrations'),
-            ], 'migrations');
+            ], 'stock-migrations');
         }
     }
 

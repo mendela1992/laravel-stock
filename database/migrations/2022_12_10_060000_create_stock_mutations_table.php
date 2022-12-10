@@ -18,8 +18,8 @@ class CreateStockMutationsTable extends Migration
             $table->morphs('stockable');
             $table->string('reference_type')->nullable();
             $table->unsignedBigInteger('reference_id')->nullable();
-            $table->integer('amount');
-            $table->text('description')->nullable();
+            $table->float('amount');
+            $table->json('details')->nullable();
             $table->timestamps();
 
             $table->index(['reference_type', 'reference_id']);

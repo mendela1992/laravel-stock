@@ -1,8 +1,8 @@
 <?php
 
-namespace Appstract\Stock\Tests;
+namespace Mendela92\Stock\Tests;
 
-use Appstract\Stock\StockServiceProvider;
+use Mendela92\Stock\StockServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as BaseTest;
 

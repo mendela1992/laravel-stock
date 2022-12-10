@@ -1,6 +1,6 @@
 <?php
 
-namespace Appstract\Stock\Tests;
+namespace Mendela92\Stock\Tests;
 
 class StockMutationsTest extends TestCase
 {
@@ -45,13 +45,13 @@ class StockMutationsTest extends TestCase
     }
 
     /** @test */
-    public function it_can_have_mutations_with_description()
+    public function it_can_have_mutations_with_details()
     {
         $this->stockModel->increaseStock(10, [
-            'description' => 'Test',
+            'details' => 'Test',
         ]);
 
-        $mutations = $this->stockModel->stockMutations->pluck(['description'])->toArray();
+        $mutations = $this->stockModel->stockMutations->pluck(['details'])->toArray();
 
         $this->assertEquals(['Test'], $mutations);
     }

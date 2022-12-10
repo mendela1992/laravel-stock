@@ -1,8 +1,8 @@
 <?php
 
-namespace Appstract\Stock\Tests;
+namespace Mendela92\Stock\Tests;
 
-use Appstract\Stock\ReferencedByStockMutations;
+use Mendela92\Stock\ReferencedByStockMutations;
 use Illuminate\Database\Eloquent\Model;
 
 class ReferenceModel extends Model

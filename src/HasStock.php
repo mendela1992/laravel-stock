@@ -1,11 +1,17 @@
 <?php
 
-namespace Appstract\Stock;
+namespace Mendela92\Stock;
 
 use DateTimeInterface;
+use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\morphMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 
+/**
+ * @property mixed $stock
+ */
 trait HasStock
 {
     /*
@@ -17,7 +23,7 @@ trait HasStock
     /**
      * Stock accessor.
      *
-     * @return int
+     * @return
      */
     public function getStockAttribute()
     {
@@ -30,46 +36,88 @@ trait HasStock
      |--------------------------------------------------------------------------
      */
 
-    public function stock($date = null)
+    /**
+     * Get model's stock value
+     *
+     * @param $date
+     * @return float|int
+     */
+    public function stock($date = null): float|int
     {
         $date = $date ?: Carbon::now();
 
-        if (! $date instanceof DateTimeInterface) {
+        if (!$date instanceof DateTimeInterface) {
             $date = Carbon::create($date);
         }
 
-        return (int) $this->stockMutations()
+        return $this->num($this->stockMutations()
             ->where('created_at', '<=', $date->format('Y-m-d H:i:s'))
-            ->sum('amount');
+            ->sum('amount'));
     }
 
-    public function increaseStock($amount = 1, $arguments = [])
+    /**
+     * Increase the model's stock
+     * @param float|int $amount
+     * @param array $arguments
+     * @return Model
+     * @throws Exception
+     */
+    public function increaseStock(float|int $amount = 1, array $arguments = []): Model
     {
         return $this->createStockMutation($amount, $arguments);
     }
 
-    public function decreaseStock($amount = 1, $arguments = [])
+    /**
+     * Decrease the model's stock
+     * @param float|int $amount
+     * @param array $arguments
+     * @return Model
+     * @throws Exception
+     */
+    public function decreaseStock(float|int $amount = 1, array $arguments = []): Model
     {
         return $this->createStockMutation(-1 * abs($amount), $arguments);
     }
 
-    public function mutateStock($amount = 1, $arguments = [])
+    /**
+     * @param float|int $amount
+     * @param array $arguments
+     * @return Model
+     * @throws Exception
+     */
+    public function mutateStock(float|int $amount = 1, array $arguments = []): Model
     {
         return $this->createStockMutation($amount, $arguments);
     }
 
-    public function clearStock($newAmount = null, $arguments = [])
+    /**
+     * Clear model's stock
+     *
+     * @param float|int|null $newAmount
+     * @param array $arguments
+     * @return bool
+     * @throws Exception
+     */
+    public function clearStock(float|int $newAmount = null, array $arguments = []): bool
     {
         $this->stockMutations()->delete();
 
-        if (! is_null($newAmount)) {
+        if (!is_null($newAmount)) {
             $this->createStockMutation($newAmount, $arguments);
         }
 
         return true;
     }
 
-    public function setStock($newAmount, $arguments = [])
+    /**
+     * Set model stock
+     *
+     * @param $newAmount
+     * @param array $arguments
+     * @return Model|void
+     * @throws Exception
+     */
+    public function setStock($newAmount, array $arguments = [])
     {
         $currentStock = $this->stock;
 
@@ -78,30 +126,46 @@ trait HasStock
         }
     }
 
-    public function inStock($amount = 1)
+    /**
+     * Check if model has stock
+     *
+     * @param float|int $amount
+     * @return bool
+     */
+    public function inStock(float|int $amount = 1): bool
     {
-        return $this->stock > 0 && $this->stock >= $amount;
+        return $this->stock > 0.0 && $this->stock >= $amount;
     }
 
+
+    /**
+     * Check if model is out of stock
+     *
+     * @return bool
+     */
     public function outOfStock()
     {
-        return $this->stock <= 0;
+        return $this->stock <= 0.0;
     }
 
     /**
      * Function to handle mutations (increase, decrease).
      *
-     * @param  int $amount
-     * @param  array  $arguments
-     * @return bool
+     * @param float|int $amount
+     * @param array $arguments
+     * @return Model
+     * @throws Exception
      */
-    protected function createStockMutation($amount, $arguments = [])
+    protected function createStockMutation(float|int $amount, array $arguments = []): Model
     {
+        if ($this->getKey() === null)
+            throw new Exception("Instance of " . class_basename($this->getMorphClass()) . " model has not been persisted.");
+
         $reference = Arr::get($arguments, 'reference');
 
         $createArguments = collect([
             'amount' => $amount,
-            'description' => Arr::get($arguments, 'description'),
+            'details' => Arr::except($arguments, 'reference'),
         ])->when($reference, function ($collection) use ($reference) {
             return $collection
                 ->put('reference_type', $reference->getMorphClass())
@@ -123,7 +187,7 @@ trait HasStock
             return $query->whereHas('stockMutations', function ($query) {
                 return $query->select('stockable_id')
                     ->groupBy('stockable_id')
-                    ->havingRaw('SUM(amount) > 0');
+                    ->havingRaw('SUM(amount) > 0.0');
             });
         });
     }
@@ -134,7 +198,7 @@ trait HasStock
             return $query->whereHas('stockMutations', function ($query) {
                 return $query->select('stockable_id')
                     ->groupBy('stockable_id')
-                    ->havingRaw('SUM(amount) <= 0');
+                    ->havingRaw('SUM(amount) <= 0.0');
             })->orWhereDoesntHave('stockMutations');
         });
     }
@@ -148,10 +212,15 @@ trait HasStock
     /**
      * Relation with StockMutation.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\morphMany
+     * @return morphMany
      */
-    public function stockMutations()
+    public function stockMutations(): morphMany
     {
         return $this->morphMany(StockMutation::class, 'stockable');
+    }
+
+    public function num($num)
+    {
+        return intval($num) == ($num) ? intval($num) : $num;
     }
 }

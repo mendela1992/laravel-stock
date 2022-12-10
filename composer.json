@@ -1,17 +1,22 @@
 {
-    "name": "appstract/laravel-stock",
+    "name": "mendela92/laravel-stock",
     "description": "Keep stock for Eloquent models",
     "keywords": [
-        "appstract",
+        "mendela92",
         "laravel-stock"
     ],
-    "homepage": "https://github.com/appstract/laravel-stock",
+    "homepage": "https://github.com/mendela1992/laravel-stock",
     "license": "MIT",
     "authors": [
         {
             "name": "Gijs Jorissen",
             "email": "gijs@appstract.nl",
             "homepage": "https://appstract.nl",
+            "role": "Developer"
+        },
+        {
+            "name": "Nelson Dick",
+            "email": "ndick4@gmail.com",
             "role": "Developer"
         }
     ],
@@ -24,12 +29,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Appstract\\Stock\\": "src"
+            "Mendela92\\Stock\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Appstract\\Stock\\Tests\\": "tests"
+            "Mendela92\\Stock\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -41,10 +46,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Appstract\\Stock\\StockServiceProvider"
+                "Mendela92\\Stock\\StockServiceProvider"
             ],
             "aliases": {
-                "Alias": "Appstract\\Stock\\StockFacade"
+                "Alias": "Mendela92\\Stock\\StockFacade"
             }
         }
     }

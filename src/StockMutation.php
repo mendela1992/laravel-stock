@@ -1,6 +1,6 @@
 <?php
 
-namespace Appstract\Stock;
+namespace Mendela92\Stock;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,9 +12,12 @@ class StockMutation extends Model
         'reference_type',
         'reference_id',
         'amount',
-        'description',
+        'details',
     ];
 
+    protected $casts = [
+        'details' => 'array'
+    ];
     /**
      * StockMutation constructor.
      */

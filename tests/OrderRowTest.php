@@ -1,6 +1,6 @@
 <?php
 
-namespace Appstract\Stock\Tests;
+namespace Mendela92\Stock\Tests;
 
 class OrderRowTest extends TestCase
 {

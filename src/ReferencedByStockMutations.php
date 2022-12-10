@@ -1,6 +1,6 @@
 <?php
 
-namespace Appstract\Stock;
+namespace Mendela92\Stock;
 
 trait ReferencedByStockMutations
 {
