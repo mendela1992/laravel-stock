@@ -16,7 +16,7 @@ class UpdateStock
     public function handle(StockCreated $stockCreated)
     {
         // Send notification when the notification is set to active
-        if (config('stock.alert.notification', true)) {
+        if ($stockCreated->model->getStockNotificationStatus()) {
 
             // Send notification when model's stock reached defined alert value
             if ($stockCreated->model->stock <= $stockCreated->model->getStockAlertAt()) {

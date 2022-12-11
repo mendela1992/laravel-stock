@@ -248,4 +248,14 @@ trait HasStock
     {
         return config('stock.alert.to');
     }
+
+    /**
+     * Define notification status for model
+     *
+     * @return Repository|Application|mixed
+     */
+    public function getStockNotificationStatus(): mixed
+    {
+        return config('stock.alert.notification', true);
+    }
 }
