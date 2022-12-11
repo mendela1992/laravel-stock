@@ -4,10 +4,12 @@ namespace Mendela92\Stock;
 
 use DateTimeInterface;
 use Exception;
+use Illuminate\Config\Repository;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\morphMany;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Mendela92\Stock\Events\StockCreated;
 
 /**
  * @property mixed $stock
@@ -25,7 +27,7 @@ trait HasStock
      *
      * @return
      */
-    public function getStockAttribute()
+    public function getStockAttribute(): float|int
     {
         return $this->stock();
     }
@@ -39,6 +41,7 @@ trait HasStock
     /**
      * Get model's stock value
      *
+     * Sum all stock records of a model.
      * @param $date
      * @return float|int
      */
@@ -50,48 +53,41 @@ trait HasStock
             $date = Carbon::create($date);
         }
 
-        return $this->num($this->stockMutations()
+        return $this->decimalValueWhenNeeded($this->stockMutations()
             ->where('created_at', '<=', $date->format('Y-m-d H:i:s'))
             ->sum('amount'));
     }
 
     /**
      * Increase the model's stock
+     *
+     * Create a new stock record with positive stock value.
      * @param float|int $amount
      * @param array $arguments
      * @return Model
      * @throws Exception
      */
-    public function increaseStock(float|int $amount = 1, array $arguments = []): Model
+    public function increaseStock(float|int $amount, array $arguments = []): Model
     {
-        return $this->createStockMutation($amount, $arguments);
+        return $this->createStockMutation(abs($amount), $arguments);
     }
 
     /**
      * Decrease the model's stock
+     *
+     * Create a new stock record with negative stock value.
      * @param float|int $amount
      * @param array $arguments
      * @return Model
      * @throws Exception
      */
-    public function decreaseStock(float|int $amount = 1, array $arguments = []): Model
+    public function decreaseStock(float|int $amount, array $arguments = []): Model
     {
         return $this->createStockMutation(-1 * abs($amount), $arguments);
     }
 
     /**
-     * @param float|int $amount
-     * @param array $arguments
-     * @return Model
-     * @throws Exception
-     */
-    public function mutateStock(float|int $amount = 1, array $arguments = []): Model
-    {
-        return $this->createStockMutation($amount, $arguments);
-    }
-
-    /**
-     * Clear model's stock
+     * Delete model's stock previous set and set new amount if defined.
      *
      * @param float|int|null $newAmount
      * @param array $arguments
@@ -110,7 +106,7 @@ trait HasStock
     }
 
     /**
-     * Set model stock
+     * Set model's stock by creating a new mutation with the difference between the old and new value
      *
      * @param $newAmount
      * @param array $arguments
@@ -127,7 +123,7 @@ trait HasStock
     }
 
     /**
-     * Check if model has stock
+     * Check if model has stock greater or equal to a certain amount. (default: amount = 1)
      *
      * @param float|int $amount
      * @return bool
@@ -139,17 +135,17 @@ trait HasStock
 
 
     /**
-     * Check if model is out of stock
+     * Check if model is out of stock.
      *
      * @return bool
      */
-    public function outOfStock()
+    public function outOfStock(): bool
     {
         return $this->stock <= 0.0;
     }
 
     /**
-     * Function to handle mutations (increase, decrease).
+     * Handle mutations (increase, decrease).
      *
      * @param float|int $amount
      * @param array $arguments
@@ -161,18 +157,17 @@ trait HasStock
         if ($this->getKey() === null)
             throw new Exception("Instance of " . class_basename($this->getMorphClass()) . " model has not been persisted.");
 
-        $reference = Arr::get($arguments, 'reference');
-
         $createArguments = collect([
             'amount' => $amount,
-            'details' => Arr::except($arguments, 'reference'),
-        ])->when($reference, function ($collection) use ($reference) {
-            return $collection
-                ->put('reference_type', $reference->getMorphClass())
-                ->put('reference_id', $reference->getKey());
-        })->toArray();
+            'details' => $arguments,
+        ])->toArray();
 
-        return $this->stockMutations()->create($createArguments);
+        $createStock = $this->stockMutations()->create($createArguments);
+
+        if ($amount < 0) {
+            event(new StockCreated($this));
+        }
+        return $createStock;
     }
 
     /*
@@ -219,8 +214,38 @@ trait HasStock
         return $this->morphMany(StockMutation::class, 'stockable');
     }
 
-    public function num($num)
+    /*
+    |--------------------------------------------------------------------------
+    | helpers
+    |--------------------------------------------------------------------------
+    */
+    /**
+     * Format value to exclude decimal if is not a decimal values. eg: decimalValueWhenNeeded(20.0)
+     * returns 20 and decimalValueWhenNeeded(18.25) returns 18.25.
+     * @param $num
+     * @return int|float
+     */
+    public function decimalValueWhenNeeded($num): float|int
     {
         return intval($num) == ($num) ? intval($num) : $num;
+    }
+
+    /**
+     * Level of stock before being notified.
+     *
+     * @return Repository|Application|mixed
+     */
+    public function getStockAlertAt(): mixed
+    {
+        return config('stock.alert.at', 10);
+    }
+
+    /**
+     * List of emails that the notifications will be sent to.
+     * @return Repository|Application|mixed
+     */
+    public function getStockAlertTo(): mixed
+    {
+        return config('stock.alert.to');
     }
 }

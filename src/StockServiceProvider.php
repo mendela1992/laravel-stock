@@ -27,6 +27,8 @@ class StockServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->register(EventServiceProvider::class);
+
         $this->mergeConfigFrom(__DIR__.'/../config/stock.php', 'stock');
     }
 }

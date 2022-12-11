@@ -21,13 +21,11 @@ return [
    | Default stock value before notification is set to
    |
    */
-    'notification_stock_level' => env("NOTIFICATION_STOCK_LEVEL", 2),
+    'alert' => [
+        'notification' => env("STOCK_NOTIFICATION", true),
 
-    'notification' => env("STOCK_NOTIFICATION", true),
+        'at' => env("NOTIFICATION_STOCK_LEVEL", 10),
 
-    'notification_channel' => [
-//        \Illuminate\Support\Facades\Mail::class,
-//        \Illuminate\Notifications\DatabaseNotification::class
-    ]
-
+        'to' => ['ndick@gmail.com']
+    ],
 ];
