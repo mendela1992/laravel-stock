@@ -42,7 +42,6 @@ abstract class TestCase extends BaseTest
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         $this->stockModel = StockModel::first();
-        $this->referenceModel = ReferenceModel::first();
         $this->orderRow = OrderRow::first();
     }
 
@@ -55,11 +54,6 @@ abstract class TestCase extends BaseTest
 
         // Create tables
         $builder->create('stock_models', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-        });
-
-        $builder->create('reference_models', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
         });

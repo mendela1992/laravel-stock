@@ -3,14 +3,13 @@
 namespace Mendela92\Stock;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class StockMutation extends Model
 {
     protected $fillable = [
         'stockable_type',
         'stockable_id',
-        'reference_type',
-        'reference_id',
         'amount',
         'details',
     ];
@@ -31,19 +30,9 @@ class StockMutation extends Model
     /**
      * Relation.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return MorphTo
      */
     public function stockable()
-    {
-        return $this->morphTo();
-    }
-
-    /**
-     * Relation.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
-     */
-    public function reference()
     {
         return $this->morphTo();
     }
