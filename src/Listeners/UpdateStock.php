@@ -4,7 +4,6 @@ namespace Mendela92\Stock\Listeners;
 
 use Illuminate\Support\Facades\Notification;
 use Mendela92\Stock\Events\StockCreated;
-use Mendela92\Stock\Notifications\LowStockLevelNotification;
 
 class UpdateStock
 {
@@ -16,10 +15,18 @@ class UpdateStock
      */
     public function handle(StockCreated $stockCreated)
     {
+        // Send notification when the notification is set to active
         if (config('stock.alert.notification', true)) {
+
+            // Send notification when model's stock reached defined alert value
             if ($stockCreated->model->stock <= $stockCreated->model->getStockAlertAt()) {
+
+                // Notification class
+                $className = config('stock.alert.model', "Mendela92\Stock\Notifications\LowStockLevelNotification");
+
+                // Send notification
                 Notification::route('mail', $stockCreated->model->getStockAlertTo())
-                    ->notify(new LowStockLevelNotification($stockCreated->model));
+                    ->notify(new $className($stockCreated->model));
             }
         }
     }

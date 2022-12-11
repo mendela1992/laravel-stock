@@ -1,5 +1,7 @@
 <?php
 
+use Mendela92\Stock\Notifications\LowStockLevelNotification;
+
 return [
 
     /*
@@ -18,7 +20,7 @@ return [
    | Default notification stock level
    |--------------------------------------------------------------------------
    |
-   | Default stock value before notification is set to
+   | Default stock alert configuration values
    |
    */
     'alert' => [
@@ -26,6 +28,8 @@ return [
 
         'at' => env("NOTIFICATION_STOCK_LEVEL", 10),
 
-        'to' => ['ndick@gmail.com']
+        'to' => ['email@example.com'],
+
+        'model' => LowStockLevelNotification::class,
     ],
 ];
