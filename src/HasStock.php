@@ -218,9 +218,9 @@ trait HasStock
     /**
      * Relation with StockMutation.
      *
-     * @return morphMany
+     * @return MorphMany
      */
-    public function stockMutations(): morphMany
+    public function stockMutations(): MorphMany
     {
         return $this->morphMany(StockMutation::class, 'stockable');
     }
@@ -244,18 +244,18 @@ trait HasStock
     /**
      * Level of stock before being notified.
      *
-     * @return Repository|Application|mixed
+     * @return int|float
      */
-    public function getStockAlertAt(): mixed
+    public function getStockAlertAt(): int|float
     {
         return config('stock.alert.at', 10);
     }
 
     /**
      * List of emails that the notifications will be sent to.
-     * @return Repository|Application|mixed
+     * @return array
      */
-    public function getStockAlertTo(): mixed
+    public function getStockAlertTo(): array
     {
         return config('stock.alert.to');
     }
@@ -263,9 +263,9 @@ trait HasStock
     /**
      * Define notification status for model
      *
-     * @return Repository|Application|mixed
+     * @return bool
      */
-    public function getStockNotificationStatus(): mixed
+    public function getStockNotificationStatus(): bool
     {
         return config('stock.alert.notification', true);
     }
