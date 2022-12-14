@@ -19,7 +19,7 @@ class UpdateStock
         if ($stockCreated->model->getStockNotificationStatus()) {
 
             // Send notification when model's stock reached defined alert value
-            if ($stockCreated->model->stock <= $stockCreated->model->getStockAlertAt()) {
+            if ($stockCreated->model->stock > 0 && $stockCreated->model->stock <= $stockCreated->model->getStockAlertAt()) {
 
                 // Notification class
                 $className = config('stock.alert.notification_model', "Mendela92\Stock\Notifications\LowStockLevelNotification");
