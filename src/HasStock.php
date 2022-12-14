@@ -145,6 +145,17 @@ trait HasStock
     }
 
     /**
+     * @param float|int $amount
+     * @param array $arguments
+     * @return Model
+     * @throws \Exception
+     */
+    public function mutateStock(float|int $amount = 1, array $arguments = []): Model
+    {
+        return $this->createStockMutation($amount, $arguments);
+    }
+
+    /**
      * Handle mutations (increase, decrease).
      *
      * @param float|int $amount

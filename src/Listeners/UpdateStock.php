@@ -22,7 +22,7 @@ class UpdateStock
             if ($stockCreated->model->stock <= $stockCreated->model->getStockAlertAt()) {
 
                 // Notification class
-                $className = config('stock.alert.model', "Mendela92\Stock\Notifications\LowStockLevelNotification");
+                $className = config('stock.alert.notification_model', "Mendela92\Stock\Notifications\LowStockLevelNotification");
 
                 // Send notification
                 Notification::route('mail', $stockCreated->model->getStockAlertTo())

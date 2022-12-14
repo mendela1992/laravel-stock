@@ -20,7 +20,7 @@ return [
    | Default notification stock level
    |--------------------------------------------------------------------------
    |
-   | Default stock alert configuration values
+   | Stock alert configuration values
    |
    */
     'alert' => [
@@ -30,6 +30,6 @@ return [
 
         'to' => ['email@example.com'],
 
-        'model' => LowStockLevelNotification::class,
+        'notification_model' => LowStockLevelNotification::class,
     ],
 ];
