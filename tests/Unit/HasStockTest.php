@@ -56,15 +56,6 @@ class HasStockTest extends TestCase
     }
 
     /** @test */
-    public function it_can_mutate_stock()
-    {
-        $this->stockModel->mutateStock(-5);
-        $this->stockModel->mutateStock(10);
-
-        $this->assertEquals(5, $this->stockModel->stock);
-    }
-
-    /** @test */
     public function it_can_clear_stock()
     {
         $this->stockModel->setStock(10);

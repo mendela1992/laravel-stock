@@ -2,6 +2,7 @@
 
 namespace Mendela92\Stock\Tests;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Mendela92\Stock\HasStock;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +16,7 @@ class OrderRow extends Model
 
     public $timestamps = false;
 
-    public function stockModel()
+    public function stockModel(): BelongsTo
     {
         return $this->belongsTo(StockModel::class);
     }

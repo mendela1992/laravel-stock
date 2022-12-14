@@ -1,6 +1,6 @@
 <?php
 
-namespace Mendela92\Stock\Tests;
+namespace Mendela92\Stock\tests;
 
 use Mendela92\Stock\HasStock;
 use Illuminate\Database\Eloquent\Model;

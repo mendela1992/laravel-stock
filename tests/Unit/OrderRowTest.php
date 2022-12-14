@@ -1,11 +1,11 @@
 <?php
 
-namespace Mendela92\Stock\Tests;
+namespace Mendela92\Stock\tests;
 
 class OrderRowTest extends TestCase
 {
     /** @test */
-    public function it_can_create_postitive_order_row()
+    public function it_can_create_positive_order_row()
     {
         $this->stockModel->setStock(10);
 

@@ -2,6 +2,7 @@
 
 namespace Mendela92\Stock\Tests;
 
+use Illuminate\Foundation\Application;
 use Mendela92\Stock\StockServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as BaseTest;
@@ -13,7 +14,7 @@ abstract class TestCase extends BaseTest
     /**
      * Define environment setup.
      *
-     * @param  \Illuminate\Foundation\Application $app
+     * @param  Application $app
      * @return void
      */
     protected function getEnvironmentSetUp($app)
@@ -66,18 +67,17 @@ abstract class TestCase extends BaseTest
         });
 
         // Create models
-        StockModel::create(['name' => 'StockModel']);
-        ReferenceModel::create(['name' => 'ReferenceModel']);
-        OrderRow::create(['stock_model_id' => 1, 'name' => 'OrderRow', 'amount' => 0]);
+        StockModel::query()->create(['name' => 'StockModel']);
+        OrderRow::query()->create(['stock_model_id' => 1, 'name' => 'OrderRow', 'amount' => 0]);
     }
 
     /**
      * Get package providers.
      *
-     * @param  \Illuminate\Foundation\Application $app
+     * @param  Application $app
      * @return array
      */
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
             StockServiceProvider::class,
@@ -87,13 +87,14 @@ abstract class TestCase extends BaseTest
     /**
      * Get package aliases.
      *
-     * @param  \Illuminate\Foundation\Application $app
+     * @param  Application $app
      * @return array
      */
-    protected function getPackageAliases($app)
+    protected function getPackageAliases($app): array
     {
         return [
             //
         ];
     }
 }
+

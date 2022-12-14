@@ -1,6 +1,6 @@
 <?php
 
-namespace Mendela92\Stock\Tests;
+namespace Mendela92\Stock\tests;
 
 class QueryScopeTest extends TestCase
 {
