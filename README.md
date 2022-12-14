@@ -2,15 +2,22 @@
 
 [//]: # ([![Latest Version on Packagist]&#40;https://img.shields.io/packagist/v/appstract/laravel-stock.svg?style=flat-square&#41;]&#40;https://packagist.org/packages/appstract/laravel-stock&#41;)
 
+[//]: # ()
+
 [//]: # ([![Total Downloads]&#40;https://img.shields.io/packagist/dt/appstract/laravel-stock.svg?style=flat-square&#41;]&#40;https://packagist.org/packages/appstract/laravel-stock&#41;)
 
-[//]: # ([![Software License]&#40;https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square&#41;]&#40;LICENSE.md&#41;)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
 [//]: # ([![Build Status]&#40;https://img.shields.io/travis/appstract/laravel-stock/master.svg?style=flat-square&#41;]&#40;https://travis-ci.org/appstract/laravel-stock&#41;)
 
-Keep stock for Eloquent models. This package will track stock mutations for your models. You can increase, decrease, clear and set stock. It's also possible to check if a model is in stock (on a certain date/time).
+Keep stock for Eloquent models. This package will track stock mutations for your models. You can increase, decrease,
+clear and set stock. It's also possible to check if a model is in stock (on a certain date/time). But also watches the
+level of stock of a model and sends a notification via Email
+
+This package was originally a fork form [laravel-stock](https://github.com/appstract/laravel-stock)
 
 ## Functionality
+
 * Increase stocks
 * Decrease stocks
 * Clear stocks
@@ -26,7 +33,51 @@ You can install the package via composer:
 composer require mendela92/laravel-stock
 ```
 
-By running `php artisan vendor:publish --provider="Mendela92\Stock\StockServiceProvider"` in your project all files for this package will be published. Run `php artisan migrate` to migrate the table. There will now be a `stock_mutations` table in your database.
+By running `php artisan vendor:publish --provider="Mendela92\Stock\StockServiceProvider"`, it will publish migrations and config file. 
+
+The configuration file looks this:
+```php
+<?php
+
+use Mendela92\Stock\Notifications\LowStockLevelNotification;
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default table name
+    |--------------------------------------------------------------------------
+    |
+    | Table name to use to store mutations.
+    |
+    */
+
+    'table' => 'stocks',
+
+    /*
+   |--------------------------------------------------------------------------
+   | Default notification stock level
+   |--------------------------------------------------------------------------
+   |
+   | Default stock alert configuration values
+   |
+   */
+    'alert' => [
+
+        'notification' => env("STOCK_NOTIFICATION", true),
+
+        'at' => env("NOTIFICATION_STOCK_LEVEL", 10),
+
+        'to' => ['ndick@gmail.com'],
+
+        'model' => LowStockLevelNotification::class,
+    ],
+];
+
+
+```
+Run `php artisan migrate` to migrate the table. There will now be a `stocks`
+table in your database.
 
 ## Usage
 
@@ -38,6 +89,24 @@ use Mendela92\Stock\HasStock;
 class Book extends Model
 {
     use HasStock;
+    
+    ...
+    
+    public function getStockAlertAt(): mixed
+    {
+        return config('stock.alert.at', 10);
+        // Change the value of the level of stock before being notification is sent.
+    }
+
+    public function getStockAlertTo(): mixed
+    {
+        // Array of emails that the notifications will be sent to.
+    }
+
+    public function getStockNotificationStatus(): mixed
+    {
+        // Conditioning notification of  status for each model instance
+    }
 }
 ```
 

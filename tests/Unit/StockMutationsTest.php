@@ -44,8 +44,8 @@ class StockMutationsTest extends TestCase
         $this->assertEquals(['10', '-5'], $mutations);
     }
 
-//    /** @test */
-    public function test_it_can_have_mutations_with_details()
+    /** @test */
+    public function it_can_have_mutations_with_details()
     {
         $this->stockModel->increaseStock(10, [
             'details' => 'Test',
