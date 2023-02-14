@@ -68,7 +68,7 @@ return [
 
         'at' => env("NOTIFICATION_STOCK_LEVEL", 10),
 
-        'to' => ['ndick@gmail.com'],
+        'to' => ['email@example.com'],
 
         'model' => LowStockLevelNotification::class,
     ],
